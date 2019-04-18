@@ -1,6 +1,6 @@
 open Syntax
 
-(* プログラムを評価する *)
+(* β変換して、式を評価する *)
 (* Eval.f : Syntax.t -> (string, Value.t) Env.t -> Value.t *)
 let rec f exp env = match exp with
   | Var (x) ->

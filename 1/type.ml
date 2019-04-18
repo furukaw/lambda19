@@ -3,7 +3,28 @@ type t = TBool
        | TPlus of t * t
        | TFun of t * t
        | TVar of t option ref
-             
+
+(* Type.typed_t : 型を持つプログラムの型 *)
+type typed_t =
+  | Var of string
+  (* let x = M in N *) (* M` λx.N *)
+  | Let of pair_t * string * pair_t  (* let M be x. N *)
+  | True
+  | False
+  | If of pair_t * pair_t * pair_t
+  | Inl of pair_t
+  | Inr of pair_t
+  (* match M with inl x -> N | inr x -> N' *)
+  (* pm M as {inl x.N, inr x.N'} *)
+  | Pm of pair_t * string * pair_t * string * pair_t
+  | Lam of string * pair_t
+  (* 引数 関数 *)
+  | App of pair_t * pair_t  (* M` N *)
+  (* | print c. M *)  
+
+(* Type.pair_t : 型とプログラムのペアの型 *)
+and pair_t = t * typed_t
+
 (* 新しい型変数を作る *)
 (* Type.gen_type : unit -> Type.t *)
 let gen_type () = TVar (ref None)
