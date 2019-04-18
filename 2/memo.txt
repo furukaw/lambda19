@@ -1,0 +1,7 @@
+(print "1", true)' (print "2". λb. print "0". if (print "3". b) then (print "4". false) else (print "5". true))
+
+(print_string "2"; fun b -> print_string "0"; if (print_string "3"; b) then (print_string "4"; false) else (print_string "5"; true)) (print_string "1"; true)
+
+OCaml : 1, 2, 0, 3, 4 (CBV, right-to-left)
+2, 1, 0, 3, 4         (CBV, left-to-right)
+2, 0, 3, 1, 4         (CBN)

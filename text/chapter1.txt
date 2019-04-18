@@ -1,0 +1,10 @@
+Chapter 1
+CALL-BY-VALUE AND CALL-BY-NAME
+値呼びと名前呼び
+
+1.1 Introduction
+  There is a certain tension in the presentation of CBPV: how much attention shall we devote to CBN and CBV?  On the one hand, we are claiming that CBPV "subsumes" CBN and CBV, and to see how that is achieved we have to discuss CBN and CBV, at least to some extend.  On the other hand, a through study of CBN and CBV would be a waste of effort, since a primary purpose of CBPV is to relieve us of that task.  Once we have CBPV (which we want to introduce as early as possible), CBV and CBN are seen to be just particular fragments of it.
+  CBPVの提示には一定の緊張があります。CBNとCBVにどの程度注意を向けなければならないのでしょうか。 一方では、CBPVがCBNとCBVを「包含」していることを主張しており、それがどのように達成されるかを見るためには、少なくともある程度はCBNとCBVについて議論しなければならない。 一方、CBPVの主な目的はその作業を軽減することであるため、CBNとCBVの徹底的な調査は努力の無駄になります。 CBPV（できる限り早く導入したい）を入手したら、CBVとCBNはその特定の断片であると見なされます。
+  The CBN/CBV material is therefore organized as follows.  In this chapter, we look informally at the key concepts and properties of these paradigms, assuming no prior knowledge of them.  This provides background for CBPV which we introduce in Chap. 2. But for the interested reader, we provide in Appendix A a through, technical treatment of CBN and CBV and their relationship to CBPV.  This chapter can thus be seen as a synopsis of Appendix A.
+  したがって、CBN / CBV資料は次のように構成されています。 この章では、これらのパラダイムの重要な概念と特性を非公式に見て、それらについての予備知識がないと仮定します。 これは私達がChapで紹介するCBPVの背景を提供します。 2.しかし興味のある読者のために、我々は付録AにCBNとCBVの技術的な扱いとCBPVとの関係を提供する。 したがって、この章は付録Aの概要と見なすことができます。
+
