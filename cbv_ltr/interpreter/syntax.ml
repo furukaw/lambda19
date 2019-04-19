@@ -51,7 +51,7 @@ let rec to_string (exp : t) : string =
 (* Syntax.print : Syntax.t -> unit *)
 let print exp =
   let str = to_string exp in
-  print_string str
+  print_endline str
 
 (* 式 exp の中の変数 x を式 v に置換した式を返す *)
 (* Syntax.subst : Syntax.t -> string -> Syntax.t -> Syntax.t *)

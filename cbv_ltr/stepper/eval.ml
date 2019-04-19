@@ -1,7 +1,7 @@
 open Syntax
 open Context
 
-(* Call-By-Value で式を評価して１ステップ簡約ごとに式を出力する *)
+(* call-by-value かつ left-to-right で式を評価して１簡約ごとに式を出力する *)
 let rec f (exp : Syntax.t) (ctxt : Context.t) : string * Syntax.t =
   match exp with
   | Var (x) -> failwith ("Unbound variable: " ^ x)
@@ -54,7 +54,7 @@ let rec f (exp : Syntax.t) (ctxt : Context.t) : string * Syntax.t =
       | Lam (x, e) ->
         let new_e = subst e x v1 in
         memo (App (v1, v2)) new_e ctxt "";
-        f (subst e x v1) ctxt
+        f new_e ctxt
       | _ -> failwith ("Type error: " ^ to_string v2
                        ^ "is expected to be 'a -> 'b") in
     (s1 ^ s2 ^ s, v)
