@@ -8,3 +8,43 @@ CALL-BY-VALUE AND CALL-BY-NAME
   The CBN/CBV material is therefore organized as follows.  In this chapter, we look informally at the key concepts and properties of these paradigms, assuming no prior knowledge of them.  This provides background for CBPV which we introduce in Chap. 2. But for the interested reader, we provide in Appendix A a through, technical treatment of CBN and CBV and their relationship to CBPV.  This chapter can thus be seen as a synopsis of Appendix A.
   したがって、CBN / CBV資料は次のように構成されています。 この章では、これらのパラダイムの重要な概念と特性を非公式に見て、それらについての予備知識がないと仮定します。 これは私達がChapで紹介するCBPVの背景を提供します。 2.しかし興味のある読者のために、我々は付録AにCBNとCBVの技術的な扱いとCBPVとの関係を提供する。 したがって、この章は付録Aの概要と見なすことができます。
 
+1.2 The Main Point Of The Chapter
+  The main point of the chapter is this:
+  CBV types and CBN types denote different kinds of things.
+この章の要点はこれです。
+CBV型とCBN型は異なる種類のものを表します。
+
+This is true both for printing semantics and for Scott semantics:
+これは印刷意味論とスコット意味論の両方に当てはまる：
+・In our printing semantics, a CBV type denotes a set whereas a CBN type denotes and A-set (which we will define in Sect. 1.7.4).
+・私達の印刷の意味論では、CBV型は集合を表し、CBN型はA集合を表します（これについては1.7.4節で定義します）。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.6.2 Denotational Semantics for print
+
+Definition 1.1------------------------------------------------------------------
+
+・次の CBV 項は values と呼ばれる：
+    V ::= x | true | false | inl V | inr V | λx.M
+（これはここまで使ってきた「閉じた値」の概念を一般化したもの）
+
+・全ての CBV 項が returners と呼ばれる（値を返すことを目的としているから）
+--------------------------------------------------------------------------------
+
+項が value である ⇔ 項が閉じてる。
+CBV print 言語の表示的意味論を記述して説明する。
+重要な原則：
+  型 A は集合 [[A]] を表し、その要素は型 A の閉じた値を表す。
+

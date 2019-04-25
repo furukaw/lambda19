@@ -1,0 +1,51 @@
+λb. if b then false else true
+この式の意味は何か？
+operational semantics -> インタプリタとかで表す
+denotational semantics -> 数学で表す（数学的ものに写像する）
+  f(true) = false
+  f(false) = true
+
+let f x = x + x と
+let g x = 2 * x は
+denotational semantics では
+f(x) = x + x = 2x
+g(x) = 2x
+なので等しい
+operational semantics では違う
+
+1.6.2
+
+閉じた値
+V ::= true | false | inl V | inr V | λx.M
+
+閉じてない値
+V ::= x | true | false | inl V | inr V | λx.M
+
+
+[[A]]（型Aを持つ数学的な値の集合）と
+[[V]]valと[[m]]retを定義する
+
+[[bool]] = {true, false}
+[[A1+A2]] = [[A1]] + [[A2]]（disjoint union）
+          = {(0, a) | a ∈ A1} ∪ {(1, a) | a ∈ A2}
+[[A->B]] = [[a]] -> A* × [[B]]
+左が値だけなのは call-by-value だから
+
+[[true]]val = true
+[[false]]val = false
+[[inl V]]val = inl [[V]]val （inl(v) = (0, v)）
+[[inr V]]val = inr [[V]]val （inr(v) = (1, v)）
+[[inl 3]]val = inl (3) = (0, 3) ∈ (Int + Int)
+
+[[M]]ret : [[Γ]] -> [[A]]
+
+
+[[if true then false else true]]ret () = ("" * "", false)
+[[true]]ret () = ("", true)
+[[false]]ret () = ("", false)
+
+[[λb. if b then false else true]]ret φ
+= λb. [[if b then false else true]]ret [b/b]
+= λb. ("", false)
+       ("", true)
+= {(true, ("", false)), (false, ("", true))}
