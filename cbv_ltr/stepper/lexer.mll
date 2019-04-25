@@ -37,7 +37,7 @@ rule token = parse
 | "false"{ FALSE }
 | lower+(alpha | digit)*
          { VAR (Lexing.lexeme lexbuf) }
-| digit+
-         { NUM (Lexing.lexeme lexbuf) }
+| (alpha | digit)+
+         { STR (Lexing.lexeme lexbuf) }
 | eof	 { EOF }                (* 入力終了 *)
 | _	 { failwith ("unknown token: " ^ Lexing.lexeme lexbuf) }

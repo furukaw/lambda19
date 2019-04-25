@@ -9,7 +9,7 @@
 %token LET IF THEN ELSE LAM APP DOT ARROW BAR COMMA BE PM AS PRINT
 %token INL INR
 %token <string> VAR
-%token <string> NUM
+%token <string> STR
 /* これは、数字には int 型の値が伴うことを示している */
 %token EOF
 /* End of File: 入力の終わりを示す */
@@ -59,5 +59,7 @@ expr:
         { Syntax.Lam ($2, $4) }
 | expr APP expr
         { Syntax.App ($1, $3) }
-| PRINT NUM DOT expr
+| PRINT VAR DOT expr
+        { Syntax.Print ($2, $4) }
+| PRINT STR DOT expr
         { Syntax.Print ($2, $4) }
