@@ -45,7 +45,7 @@ let rec to_string (exp : t) : string =
     pq ("pm " ^ to_string e ^ " as {inl " ^ xl ^ "." ^ to_string el ^ ", inr " ^ xr ^ "." ^ to_string er ^ "}")
   | Lam (x, e) -> pq ("λ" ^ x ^ "." ^ to_string e)
   | App (e1, e2) -> pq (to_string e1 ^ "` " ^ to_string e2)
-  | Print (s, e) -> pq ("print " ^ s ^ "." ^ to_string e)
+  | Print (s, e) -> pq ("print \"" ^ s ^ "\"." ^ to_string e)
 
 (* プログラムをプリントする関数 *)
 (* Syntax.print : Syntax.t -> unit *)

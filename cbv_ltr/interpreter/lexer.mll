@@ -17,6 +17,7 @@ rule token = parse
 	 { token lexbuf }
 | "("	 { LPAREN }
 | ")"	 { RPAREN }
+| "\""   { ignore (Lexing.lexeme lexbuf); STR (strings lexbuf) }
 | "let"  { LET }
 | "be"   { BE }
 | "."    { DOT }
@@ -37,7 +38,12 @@ rule token = parse
 | "false"{ FALSE }
 | lower+(alpha | digit)*
          { VAR (Lexing.lexeme lexbuf) }
-| (alpha | digit)+
-         { STR (Lexing.lexeme lexbuf) }
 | eof	 { EOF }                (* 入力終了 *)
 | _	 { failwith ("unknown token: " ^ Lexing.lexeme lexbuf) }
+
+and strings = parse
+| "\""   { ignore (Lexing.lexeme lexbuf); "" }
+| eof    { ignore (Format.eprintf "warning: unterminated string@."); "" }
+| _      { let s1 = Lexing.lexeme lexbuf in
+           let s2 = strings lexbuf in
+	   s1 ^ s2 }
