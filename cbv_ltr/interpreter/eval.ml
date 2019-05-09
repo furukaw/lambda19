@@ -19,7 +19,8 @@ let rec f (exp : Syntax.t) : string * Syntax.t =
         f e2
       | False ->
         f e3
-      | _ -> failwith (to_string v1 ^ " is expected to be bool") in
+      | _ -> failwith ("Type error: " ^ to_string v1
+                       ^ " is expected to be bool") in
     (s1 ^ s23, v23)
   | Inl (e) ->
     let (s, v) = f e in
@@ -49,7 +50,7 @@ let rec f (exp : Syntax.t) : string * Syntax.t =
         let new_e = subst e x v1 in
         f new_e
       | _ -> failwith ("Type error: " ^ to_string v2
-                       ^ "is expected to be 'a -> 'b") in
+                       ^ " is expected to be 'a -> 'b") in
     (s1 ^ s2 ^ s, v)
   | Print (s, e) ->
     let (se, ve) = f e in
