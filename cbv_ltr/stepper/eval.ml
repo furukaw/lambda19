@@ -5,60 +5,62 @@ open Context
 let rec f (exp : Syntax.t) (ctxt : Context.t) : string * Syntax.t =
   match exp with
   | Var (x) -> failwith ("Unbound variable: " ^ x)
-  | Let (e1, x, e2) ->
-    let (s1, v1) = f e1 (CLet (x, e2) :: ctxt) in
-    let new_e2 = subst e2 x v1 in
-    memo (Let (v1, x, e2)) new_e2 ctxt "";
-    let (s2, v2) = f new_e2 ctxt in
-    (s1 ^ s2, v2)
+  | Let (eM, x, eN) ->
+    let (m, vV) = f eM (CLet (x, eN) :: ctxt) in
+    let new_eN = subst eN x vV in
+    memo (Let (vV, x, eN)) new_eN ctxt "";
+    let (m', vW) = f new_eN ctxt in
+    (m ^ m', vW)
   | True -> ("", True)
   | False -> ("", False)
-  | If (e1, e2, e3) ->
-    let (s1, v1) = f e1 (CIf (e2, e3) :: ctxt) in
-    let (s23, v23) =
-      match v1 with
+  | If (eM, eN, eN') ->
+    let (m, v_true_false) = f eM (CIf (eN, eN') :: ctxt) in
+    let (m', vV) =
+      match v_true_false with
       | True ->
-        memo (If (v1, e2, e3)) e2 ctxt "";
-        f e2 ctxt
+        memo (If (v_true_false, eN, eN')) eN ctxt "";
+        f eN ctxt
       | False ->
-        memo (If (v1, e2, e3)) e3 ctxt "";
-        f e3 ctxt
-      | _ -> failwith (to_string v1 ^ " is expected to be bool") in
-    (s1 ^ s23, v23)
-  | Inl (e) ->
-    let (s, v) = f e (CInl :: ctxt) in
-    (s, Inl (v))
-  | Inr (e) ->
-    let (s, v) = f e (CInr :: ctxt) in
-    (s, Inr (v))
-  | Pm (e, xl, el, xr, er) ->
-    let (s, v) = f e (CPm (xl, el, xr, er) :: ctxt) in
-    let (slr, vlr) = match v with
-      | Inl (l) ->
-        let new_el = subst el xl l in
-        memo (Pm (v, xl, el, xr, er)) new_el ctxt "";
-        f new_el ctxt
-      | Inr (r) ->
-        let new_er = subst er xr r in
-        memo (Pm (v, xl, el, xr, er)) new_er ctxt "";
-        f new_er ctxt
-      | _ ->  failwith ("Type error: " ^ to_string v
+        memo (If (v_true_false, eN, eN')) eN' ctxt "";
+        f eN' ctxt
+      | _ -> failwith ("Type error: " ^ to_string v_true_false
+                       ^ " is expected to be bool") in
+    (m ^ m', vV)
+  | Inl (eM) ->
+    let (m, vV) = f eM (CInl :: ctxt) in
+    (m, Inl (vV))
+  | Inr (eM) ->
+    let (m, vV) = f eM (CInr :: ctxt) in
+    (m, Inr (vV))
+  | Pm (eM, x, eN, x', eN') ->
+    let (m, v_inl_inr) = f eM (CPm (x, eN, x', eN') :: ctxt) in
+    let (m', vW) =
+      match v_inl_inr with
+      | Inl (vV) ->
+        let new_eN = subst eN x vV in
+        memo (Pm (v_inl_inr, x, eN, x', eN')) new_eN ctxt "";
+        f new_eN ctxt
+      | Inr (vV) ->
+        let new_eN' = subst eN' x' vV in
+        memo (Pm (v_inl_inr, x, eN, x', eN')) new_eN' ctxt "";
+        f new_eN' ctxt
+      | _ ->  failwith ("Type error: " ^ to_string v_inl_inr
                         ^ " is expected to be 'a + 'b") in
-    (s ^ slr, vlr)
-  | Lam (x, e) -> ("", Lam (x, e))
-  | App (e1, e2) ->
-    let (s1, v1) = f e1 (CAppL (e2) :: ctxt) in
-    let (s2, v2) = f e2 (CAppR (v1) :: ctxt) in
-    let (s, v) =
-      match v2 with
-      | Lam (x, e) ->
-        let new_e = subst e x v1 in
-        memo (App (v1, v2)) new_e ctxt "";
-        f new_e ctxt
-      | _ -> failwith ("Type error: " ^ to_string v2
-                       ^ "is expected to be 'a -> 'b") in
-    (s1 ^ s2 ^ s, v)
-  | Print (s, e) ->
-    memo exp e ctxt s;
-    let (se, ve) = f e ctxt in
-    (s ^ se, ve)
+    (m ^ m', vW)
+  | Lam (x, eM) -> ("", Lam (x, eM))
+  | App (eM, eN) ->
+    let (m, vV) = f eM (CAppL (eN) :: ctxt) in
+    let (m', v_lx_N') = f eN (CAppR (vV) :: ctxt) in
+    let (m'', vW) =
+      match v_lx_N' with
+      | Lam (x, eN') ->
+        let new_eN' = subst eN' x vV in
+        memo (App (vV, v_lx_N')) new_eN' ctxt "";
+        f new_eN' ctxt
+      | _ -> failwith ("Type error: " ^ to_string v_lx_N'
+                       ^ " is expected to be 'a -> 'b") in
+    (m ^ m' ^ m'', vW)
+  | Print (c, eM) ->
+    memo (Print (c, eM)) eM ctxt c;
+    let (m, vV) = f eM ctxt in
+    (c ^ m, vV)

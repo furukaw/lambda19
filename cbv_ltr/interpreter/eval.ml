@@ -4,54 +4,55 @@ open Syntax
 let rec f (exp : Syntax.t) : string * Syntax.t =
   match exp with
   | Var (x) -> failwith ("Unbound variable: " ^ x)
-  | Let (e1, x, e2) ->
-    let (s1, v1) = f e1 in
-    let new_e2 = subst e2 x v1 in
-    let (s2, v2) = f new_e2 in
-    (s1 ^ s2, v2)
+  | Let (eM, x, eN) ->
+    let (m, vV) = f eM in
+    let new_eN = subst eN x vV in
+    let (m', vW) = f new_eN in
+    (m ^ m', vW)
   | True -> ("", True)
   | False -> ("", False)
-  | If (e1, e2, e3) ->
-    let (s1, v1) = f e1 in
-    let (s23, v23) =
-      match v1 with
+  | If (eM, eN, eN') ->
+    let (m, v_true_false) = f eM in
+    let (m', vV) =
+      match v_true_false with
       | True ->
-        f e2
+        f eN
       | False ->
-        f e3
-      | _ -> failwith ("Type error: " ^ to_string v1
+        f eN'
+      | _ -> failwith ("Type error: " ^ to_string v_true_false
                        ^ " is expected to be bool") in
-    (s1 ^ s23, v23)
-  | Inl (e) ->
-    let (s, v) = f e in
-    (s, Inl (v))
-  | Inr (e) ->
-    let (s, v) = f e in
-    (s, Inr (v))
-  | Pm (e, xl, el, xr, er) ->
-    let (s, v) = f e in
-    let (slr, vlr) = match v with
-      | Inl (l) ->
-        let new_el = subst el xl l in
-        f new_el
-      | Inr (r) ->
-        let new_er = subst er xr r in
-        f new_er
-      | _ ->  failwith ("Type error: " ^ to_string v
+    (m ^ m', vV)
+  | Inl (eM) ->
+    let (m, vV) = f eM in
+    (m, Inl (vV))
+  | Inr (eM) ->
+    let (m, vV) = f eM in
+    (m, Inr (vV))
+  | Pm (eM, x, eN, x', eN') ->
+    let (m, v_inl_inr) = f eM in
+    let (m', vW) =
+      match v_inl_inr with
+      | Inl (vV) ->
+        let new_eN = subst eN x vV in
+        f new_eN
+      | Inr (vV) ->
+        let new_eN' = subst eN' x' vV in
+        f new_eN'
+      | _ -> failwith ("Type error: " ^ to_string v_inl_inr
                         ^ " is expected to be 'a + 'b") in
-    (s ^ slr, vlr)
-  | Lam (x, e) -> ("", Lam (x, e))
-  | App (e1, e2) ->
-    let (s1, v1) = f e1 in
-    let (s2, v2) = f e2 in
-    let (s, v) =
-      match v2 with
-      | Lam (x, e) ->
-        let new_e = subst e x v1 in
-        f new_e
-      | _ -> failwith ("Type error: " ^ to_string v2
+    (m ^ m', vW)
+  | Lam (x, eM) -> ("", Lam (x, eM))
+  | App (eM, eN) ->
+    let (m, vV) = f eM in
+    let (m', v_lx_N') = f eN in
+    let (m'', vW) =
+      match v_lx_N' with
+      | Lam (x, eN') ->
+        let new_eN' = subst eN' x vV in
+        f new_eN'
+      | _ -> failwith ("Type error: " ^ to_string v_lx_N'
                        ^ " is expected to be 'a -> 'b") in
-    (s1 ^ s2 ^ s, v)
-  | Print (s, e) ->
-    let (se, ve) = f e in
-    (s ^ se, ve)
+    (m ^ m' ^ m'', vW)
+  | Print (c, eM) ->
+    let (m, vV) = f eM in
+    (c ^ m, vV)
